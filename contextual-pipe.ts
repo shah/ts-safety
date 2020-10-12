@@ -1,5 +1,3 @@
-import * as g from "./guards.ts";
-
 export interface Enhancer<C, T> {
   enhance(ctx: C, instance?: T): Promise<T>;
 }
