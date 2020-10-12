@@ -1,2 +1,2 @@
-export * from "./enhance.ts";
+export * from "./contextual-pipe.ts";
 export * from "./guards.ts";
