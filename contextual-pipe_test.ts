@@ -10,7 +10,8 @@ interface TestTarget {
   isTestObject: true;
 }
 
-interface ChainedTarget extends TestTarget {
+interface ChainedTarget
+  extends TestTarget, mod.TransformerProvenanceSupplier<TestTarget> {
   isChainedTarget: true;
   previous: TestTarget;
 }
@@ -47,6 +48,7 @@ class TestPipeUnion
       isTestObject: true,
       isChainedTarget: true,
       previous: content,
+      isTransformed: mod.transformationSource(content),
     };
   }
 
@@ -59,6 +61,7 @@ class TestPipeUnion
       isTestObject: true,
       isChainedTarget: true,
       previous: content,
+      isTransformed: mod.transformationSource(content),
     };
   }
 }
@@ -92,6 +95,7 @@ class TestPipeUnionSync
       isTestObject: true,
       isChainedTarget: true,
       previous: content,
+      isTransformed: mod.transformationSource(content),
     };
   }
 
@@ -101,6 +105,7 @@ class TestPipeUnionSync
       isTestObject: true,
       isChainedTarget: true,
       previous: content,
+      isTransformed: mod.transformationSource(content),
     };
   }
 }

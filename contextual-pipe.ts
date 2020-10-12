@@ -1,3 +1,5 @@
+import * as g from "./guards.ts";
+
 export interface Enhancer<C, T> {
   enhance(ctx: C, instance?: T): Promise<T>;
 }
@@ -12,6 +14,40 @@ export interface Transformer<C, T> {
 
 export interface TransformerSync<C, T> {
   transform(ctx: C, content?: T): T;
+}
+
+export interface TransformerProvenance<T> {
+  readonly from: T;
+  readonly position: number;
+  readonly remarks?: string;
+}
+
+export function transformationSource<T>(
+  source: T,
+  remarks?: string,
+): TransformerProvenance<T> {
+  return {
+    from: source,
+    position: nextTransformerProvenancePosition(source),
+    remarks,
+  };
+}
+
+export interface TransformerProvenanceSupplier<T> {
+  readonly isTransformed: TransformerProvenance<T>;
+}
+
+export function nextTransformerProvenancePosition<T>(
+  o: T | TransformerProvenance<T> | TransformerProvenanceSupplier<T>,
+): number {
+  if (!o || typeof o !== "object") return 0;
+  if ("position" in o) {
+    return o.position + 1;
+  }
+  if ("isTransformed" in o) {
+    return o.isTransformed.position + 1;
+  }
+  return 0;
 }
 
 export function enhancementsPipe<C, T>(
