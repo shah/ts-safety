@@ -128,7 +128,7 @@ Deno.test("synch enhancements pipe", () => {
 });
 
 Deno.test("async transformation pipe", async () => {
-  const pipe = mod.transformationPipe<TestContext, TestTarget>(
+  const pipe = mod.transformationsPipe<TestContext, TestTarget>(
     new TestPipeStart(),
     new TestPipeUnion(),
   );
@@ -139,7 +139,7 @@ Deno.test("async transformation pipe", async () => {
 });
 
 Deno.test("synch transformation pipe", () => {
-  const pipe = mod.transformationPipeSync<TestContext, TestTarget>(
+  const pipe = mod.transformationsPipeSync<TestContext, TestTarget>(
     new TestPipeStartSync(),
     new TestPipeUnionSync(),
   );

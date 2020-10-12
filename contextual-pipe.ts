@@ -56,7 +56,7 @@ export function enhancementsPipeSync<C, T>(
   }();
 }
 
-export function transformationPipe<C, T>(
+export function transformationsPipe<C, T>(
   ...elements: Transformer<C, T>[]
 ): Transformer<C, T> {
   if (elements.length == 0) {
@@ -77,7 +77,7 @@ export function transformationPipe<C, T>(
   }();
 }
 
-export function transformationPipeSync<C, T>(
+export function transformationsPipeSync<C, T>(
   ...elements: TransformerSync<C, T>[]
 ): TransformerSync<C, T> {
   if (elements.length == 0) {
