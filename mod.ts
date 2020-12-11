@@ -11,8 +11,10 @@ export function typeGuard<T, K extends keyof T = keyof T>(
 ): TypeGuard<T> {
   return (o: unknown): o is T => {
     // Make sure that the object passed is a real object and has all required props
-    return o && typeof o === "object" &&
-      !requireKeysInSingleT.find((p) => !(p in o));
+    if (o && typeof o === "object") {
+      return !requireKeysInSingleT.find((p) => !(p in o));
+    }
+    return false;
   };
 }
 
@@ -35,7 +37,10 @@ export function typeGuardArrayOf<
 ): TypeGuard<ArrayT> {
   const guard = typeGuard<T>(...requireKeysInSingleT);
   return (o: unknown): o is ArrayT => {
-    return o && Array.isArray(o) && !o.find((i) => !guard(i));
+    if (o && Array.isArray(o)) {
+      return !o.find((i) => !guard(i));
+    }
+    return false;
   };
 }
 
