@@ -12,12 +12,12 @@ const [isTestType, isTestTypeArray] = mod.typeGuards<
   TestTypeArray
 >("testPropName");
 
-Deno.test(`type guard`, async () => {
+Deno.test(`type guard`, () => {
   ta.assert(isTestType({ testPropName: "test prop value" }));
   ta.assert(!isTestType({ invalidPropName: "test prop value" }));
 });
 
-Deno.test(`type array guard`, async () => {
+Deno.test(`type array guard`, () => {
   ta.assert(
     isTestTypeArray(
       [
