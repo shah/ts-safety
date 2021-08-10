@@ -5,6 +5,10 @@ export interface TestType {
   readonly testPropName: string;
 }
 
+export interface TestSubType extends TestType {
+  readonly subTypePropName: string;
+}
+
 export type TestTypeArray = TestType[];
 
 const [isTestType, isTestTypeArray] = mod.typeGuards<
@@ -12,9 +16,52 @@ const [isTestType, isTestTypeArray] = mod.typeGuards<
   TestTypeArray
 >("testPropName");
 
+const isTestSubType = mod.subTypeGuard<TestType, TestSubType>(
+  isTestType,
+  "subTypePropName",
+);
+
+const isAllTypes = mod.multipleTypesGuard<TestType & TestSubType, TestSubType>(
+  [isTestType, isTestSubType],
+  "testPropName",
+  "subTypePropName",
+);
+
 Deno.test(`type guard`, () => {
   ta.assert(isTestType({ testPropName: "test prop value" }));
   ta.assert(!isTestType({ invalidPropName: "test prop value" }));
+});
+
+Deno.test(`subtype guard`, () => {
+  ta.assert(
+    isTestSubType({
+      testPropName: "test prop value",
+      subTypePropName: "test prop value",
+    }),
+  );
+  ta.assert(
+    !isTestSubType({
+      testPropName: "test prop value",
+      invalidPropName: "test prop value",
+    }),
+  );
+  ta.assert(!isTestSubType({ invalidPropName: "test prop value" }));
+});
+
+Deno.test(`multiple types guard`, () => {
+  ta.assert(
+    isAllTypes({
+      testPropName: "test prop value",
+      subTypePropName: "test prop value",
+    }),
+  );
+  ta.assert(
+    !isAllTypes({
+      testPropName: "test prop value",
+      invalidPropName: "test prop value",
+    }),
+  );
+  ta.assert(!isTestSubType({ invalidPropName: "test prop value" }));
 });
 
 Deno.test(`type array guard`, () => {

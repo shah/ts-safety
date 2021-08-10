@@ -18,6 +18,41 @@ export function typeGuard<T, K extends keyof T = keyof T>(
   };
 }
 
+export function subTypeGuard<
+  Type,
+  SubType,
+  K extends keyof SubType = keyof SubType,
+>(base: TypeGuard<Type>, ...requireKeysInSingleT: K[]): TypeGuard<SubType> {
+  return (o: unknown): o is SubType => {
+    if (base(o)) {
+      // Make sure that the object passed is a real object and has all required props
+      if (o && typeof o === "object") {
+        return !requireKeysInSingleT.find((p) => !(p in o));
+      }
+    }
+    return false;
+  };
+}
+
+export function multipleTypesGuard<
+  AggregateType,
+  ReturnType,
+  K extends keyof AggregateType = keyof AggregateType,
+>(
+  guards: TypeGuard<unknown>[],
+  ...requireKeysInSingleT: K[]
+): TypeGuard<ReturnType> {
+  return (o: unknown): o is ReturnType => {
+    for (const guard of guards) {
+      if (!guard(o)) return false;
+    }
+    if (o && typeof o === "object") {
+      return !requireKeysInSingleT.find((p) => !(p in o));
+    }
+    return false;
+  };
+}
+
 export function typeGuardCustom<X, T extends X, K extends keyof T = keyof T>(
   ...requireKeysInSingleT: K[] // = [...keyof T] TODO: default this to all required keys
 ): TypeGuardCustom<X, T> {
